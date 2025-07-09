@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DcPlaylistPlugin", "DcPlaylistPlugin\DcPlaylistPlugin.csproj", "{F70EFD02-AAA9-48A1-9E44-F0016E090FF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistBot", "PlaylistBot\PlaylistBot.csproj", "{1F94B531-6AC9-4531-BB1C-FB65E94569E5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F70EFD02-AAA9-48A1-9E44-F0016E090FF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F70EFD02-AAA9-48A1-9E44-F0016E090FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F70EFD02-AAA9-48A1-9E44-F0016E090FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F70EFD02-AAA9-48A1-9E44-F0016E090FF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F94B531-6AC9-4531-BB1C-FB65E94569E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F94B531-6AC9-4531-BB1C-FB65E94569E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F94B531-6AC9-4531-BB1C-FB65E94569E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F94B531-6AC9-4531-BB1C-FB65E94569E5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
