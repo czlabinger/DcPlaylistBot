@@ -12,6 +12,7 @@
         <MarkPackageReferencesAsExternallyResolved>false</MarkPackageReferencesAsExternallyResolved>
         <OutputPath>..\Output\Plugins\</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
 
 
@@ -20,6 +21,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
     <ItemGroup>
@@ -61,6 +63,10 @@
         </Reference>
         <Reference Include="mscorlib"/>
         <Reference Include="netstandard"/>
+        <Reference Include="PlaylistManager">
+            <HintPath>$(BeatSaberDir)\Plugins\PlaylistManager.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
         <Reference Include="SiraUtil">
             <HintPath>$(BeatSaberDir)\Plugins\SiraUtil.dll</HintPath>
             <Private>false</Private>
