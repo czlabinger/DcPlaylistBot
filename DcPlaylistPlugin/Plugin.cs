@@ -2,9 +2,13 @@
 using System.IO;
 using System.IO.Pipes;
 using System.Text;
-using DcPlaylistPlugin.Util;
+using System.Threading.Tasks;
+using BeatSaberMarkupLanguage.Util;
+using DcPlaylistPlugin.Commands;
 using IPA;
 using IPA.Loader;
+using SongCore;
+using UnityEngine.SceneManagement;
 using IpaLogger = IPA.Logging.Logger;
 
 namespace DcPlaylistPlugin;
@@ -23,6 +27,12 @@ internal class Plugin {
     public void OnApplicationStart() {
         Log.Debug("OnApplicationStart");
         StartListening();
+        SceneManager.activeSceneChanged += (arg0, scene) => {
+            if (Commands.Commands.ReloadNeeded && SceneManager.GetActiveScene().name == "MainMenu") {
+                Loader.Instance.RefreshSongs();
+                Commands.Commands.ReloadNeeded = false;
+            }
+        };
 
         //BotHelper.StartBotProcess();
 
@@ -54,8 +64,13 @@ internal class Plugin {
         pipeServer.BeginWaitForConnection(asyncResult => {
             try {
                 StartListening();
-
-                CommandHandler.HandleCommand(asyncResult);
+                
+                CommandHandler.HandleCommand(asyncResult)
+                    .ContinueWith(task => {
+                        if (task.Exception != null)
+                            Log.Error($"Error in pipe connection: {task.Exception}");
+                    }, TaskContinuationOptions.OnlyOnFaulted);
+                
             } catch (Exception ex) {
                 Log.Error($"Error in pipe connection: {ex}");
             }

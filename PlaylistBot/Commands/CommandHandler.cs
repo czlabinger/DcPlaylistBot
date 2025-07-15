@@ -6,7 +6,7 @@ using Discord.Interactions;
 namespace PlaylistBot.Commands;
 
 public class CommandHandler : InteractionModuleBase<SocketInteractionContext> {
-    private InteractionService _interactionService = new (Program.Client.Rest);
+    private readonly InteractionService _interactionService = new (Program.Client.Rest);
 
     public async Task InitializeAsync() {
         await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
@@ -19,18 +19,11 @@ public class CommandHandler : InteractionModuleBase<SocketInteractionContext> {
         };
     }
 
-    [SlashCommand("echo", "echo input")]
-    public async Task Echo(string input) {
+    [SlashCommand("add", "Add a map to the queue")]
+    public async Task Add(string beatsaverIdOrLink) {
         try {
-            string response = "";
-            using (NamedPipeClientStream client = new NamedPipeClientStream(".", "DcPlaylistPlugin",
-                       PipeDirection.InOut, PipeOptions.Asynchronous)) {
 
-                input = new string(input.Where(c => !char.IsControl(c)).ToArray());
-                response = await SendMessage(input, client);
-            }
-
-            await RespondAsync(response);
+            await RespondAsync(await SendMessage("add " + beatsaverIdOrLink));
         } catch (Exception ex) {
             Console.WriteLine("Exception: {0}", ex);
             await RespondAsync($"```Error: {ex.Message}\n{ex.StackTrace}```");
@@ -39,16 +32,21 @@ public class CommandHandler : InteractionModuleBase<SocketInteractionContext> {
     }
 
 
-    private static async Task<string> SendMessage(string input, NamedPipeClientStream client) {
-        await client.ConnectAsync();
+    private static async Task<string> SendMessage(string input) {
+        using (NamedPipeClientStream client = new NamedPipeClientStream(".", "DcPlaylistPlugin",
+                   PipeDirection.InOut, PipeOptions.Asynchronous)) {
 
-        using (var writer = new StreamWriter(client, Encoding.ASCII, 1024, true) { AutoFlush = true })
-        using (var reader = new StreamReader(client, Encoding.ASCII, false, 1024, true)) {
-            await writer.WriteLineAsync(input);
-            await writer.FlushAsync();
+            input = new string(input.Where(c => !char.IsControl(c)).ToArray());
 
-            string response = await reader.ReadLineAsync() ?? "Error during command Execution";
-            return response;
+            await client.ConnectAsync();
+
+            using (var writer = new StreamWriter(client, Encoding.ASCII, 1024, true) { AutoFlush = true })
+            using (var reader = new StreamReader(client, Encoding.ASCII, false, 1024, true)) {
+                await writer.WriteLineAsync(input);
+                await writer.FlushAsync();
+
+                return await reader.ReadLineAsync() ?? "Error during command Execution";
+            }
         }
     }
 }
