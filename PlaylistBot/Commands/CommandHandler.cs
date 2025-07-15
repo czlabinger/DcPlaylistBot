@@ -1,6 +1,7 @@
 ﻿using System.IO.Pipes;
 using System.Reflection;
 using System.Text;
+using Discord;
 using Discord.Interactions;
 
 namespace PlaylistBot.Commands;
@@ -20,16 +21,46 @@ public class CommandHandler : InteractionModuleBase<SocketInteractionContext> {
 
     [SlashCommand("add", "Add a map to the queue")]
     public async Task Add(string beatsaverIdOrLink) {
+        EmbedBuilder embedBuilder = new() {
+            Title = "Add Command Result",
+        };
+        embedBuilder.WithAuthor(Context.Client.CurrentUser)
+            .WithCurrentTimestamp();
+        
         try {
-            await RespondAsync(await SendMessage("add " + beatsaverIdOrLink));
+            string response = await SendMessage("add " + beatsaverIdOrLink);
+
+            if (!response.StartsWith("Added map")) {
+                embedBuilder.WithColor(Color.Red);
+
+                if (response.Equals("Map already downloaded"))
+                    embedBuilder.WithColor(Color.Orange);
+                
+                embedBuilder.Description = response;
+            
+                await RespondAsync(embed: embedBuilder.Build());
+                return;
+            } 
+                
+            
+            string url = response.Split('$')[1];
+            response = response.Split('$')[0];
+            
+            embedBuilder.Description = response;
+            embedBuilder .WithColor(Color.Green)
+                .WithImageUrl(url);
+                
+            await RespondAsync(embed: embedBuilder.Build());
         }
         catch (Exception ex) {
             Console.WriteLine("Exception: {0}", ex);
-            await RespondAsync($"```Error: {ex.Message}\n{ex.StackTrace}```");
+            embedBuilder.Description = $"```Error: {ex.Message}\n{ex.StackTrace}```";
+            embedBuilder.WithColor(Color.Red);
+            
+            await RespondAsync(embed: embedBuilder.Build());
             throw;
         }
     }
-
 
     private static async Task<string> SendMessage(string input) {
         using (var client = new NamedPipeClientStream(".", "DcPlaylistPlugin",

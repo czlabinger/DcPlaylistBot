@@ -22,7 +22,7 @@ public class CommandHandler {
                 ? await handler(command)
                 : $"Unknown command: {command}";
 
-
+            
             await writer.WriteLineAsync(response);
             await writer.FlushAsync();
         }
