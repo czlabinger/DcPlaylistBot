@@ -10,7 +10,10 @@
         <EnableFrameworkPathOverride>true</EnableFrameworkPathOverride>
         <FrameworkPathOverride>$(BeatSaberDir)\Beat Saber_Data\Managed</FrameworkPathOverride>
         <MarkPackageReferencesAsExternallyResolved>false</MarkPackageReferencesAsExternallyResolved>
+        <OutputPath>..\Output\Plugins\</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
+    
 
     <ItemGroup>
         <PackageReference Include="BeatSaberModdingTools.Tasks" Version="2.0.0-beta7">
@@ -89,5 +92,25 @@
             <Private>False</Private>
         </Reference>
     </ItemGroup>
+
+    <Target Name="CleanPluginsFolder" AfterTargets="Build">
+        <RemoveDir Directories="..\Output\Plugins\Artifact" />
+        <RemoveDir Directories="..\Output\Plugins\zip" />
+    </Target>
+
+    <Target Name="CopyOutput" AfterTargets="Build">
+        <Message Text="Copying output folder after build..." Importance="High" />
+        <ItemGroup>
+            <PluginFiles Include="..\Output\Plugin\DcPlaylistPlugin.*" />
+            <ExeFiles Include="..\Output\UserData\**\*" />
+        </ItemGroup>
+        <Copy
+                SourceFiles="@(PluginFiles)"
+                DestinationFiles="@(PluginFiles->'$(BeatSaberDir)\Plugins\%(RecursiveDir)%(Filename)%(Extension)')" />
+        <Copy
+                SourceFiles="@(ExeFiles)"
+                DestinationFiles="@(ExeFiles->'$(BeatSaberDir)\userData\%(RecursiveDir)%(Filename)%(Extension)')" />
+    </Target>
+
 
 </Project>

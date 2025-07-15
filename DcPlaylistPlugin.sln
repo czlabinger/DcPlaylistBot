@@ -1,8 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DcPlaylistPlugin", "DcPlaylistPlugin\DcPlaylistPlugin.csproj", "{F70EFD02-AAA9-48A1-9E44-F0016E090FF0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistBot", "PlaylistBot\PlaylistBot.csproj", "{1F94B531-6AC9-4531-BB1C-FB65E94569E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DcPlaylistPlugin", "DcPlaylistPlugin\DcPlaylistPlugin.csproj", "{F70EFD02-AAA9-48A1-9E44-F0016E090FF0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1F94B531-6AC9-4531-BB1C-FB65E94569E5} = {1F94B531-6AC9-4531-BB1C-FB65E94569E5}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

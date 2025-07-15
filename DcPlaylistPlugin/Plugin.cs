@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BeatSaberMarkupLanguage.Util;
 using DcPlaylistPlugin.Commands;
+using DcPlaylistPlugin.Util;
 using IPA;
 using IPA.Loader;
 using SongCore;
@@ -34,7 +35,7 @@ internal class Plugin {
             }
         };
 
-        //BotHelper.StartBotProcess();
+        BotHelper.StartBotProcess();
 
     }
 
