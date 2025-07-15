@@ -8,8 +8,8 @@ public class Program {
     internal static readonly DiscordSocketClient Client = new();
     private static readonly CommandHandler CommandHandler = new();
 
-    private static readonly NamedPipeServerStream ShutdownServer = new(
-        "DcPlaylistBotShutdown",
+    private static readonly NamedPipeServerStream Server = new(
+        "DcPlaylistBot",
         PipeDirection.InOut,
         NamedPipeServerStream.MaxAllowedServerInstances,
         PipeTransmissionMode.Byte,
@@ -21,14 +21,14 @@ public class Program {
         await StartBot();
         Client.Ready += async () => await CommandHandler.InitializeAsync();
 
-        ShutdownServer.BeginWaitForConnection(async (asyncResult) => {
-            Console.WriteLine("Shutting down now...");
-            await Client.LogoutAsync();
-            await Client.DisposeAsync();
-            ShutdownServer.Disconnect();
-            await ShutdownServer.DisposeAsync();
-            Environment.Exit(0);
-        }, ShutdownServer);
+        Server.BeginWaitForConnection(async (asyncResult) => {
+            using (StreamReader reader = new StreamReader(Server)) {
+                string line = await reader.ReadLineAsync() ?? "";
+                if (line.Equals("Quit")) {
+                    await Quit();
+                }
+            }
+        }, Server);
 
 
         await Task.Delay(-1);
@@ -39,20 +39,25 @@ public class Program {
         return Task.CompletedTask;
     }
 
-    //TODO: Better solution for token
     private static async Task StartBot() {
-        var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = "PlaylistBot.token.txt";
-        string token;
-
-        using (var stream = assembly.GetManifestResourceStream(resourceName)) {
-            if (stream == null) throw new InvalidOperationException($"Resource '{resourceName}' not found.");
-            using (var reader = new StreamReader(stream)) {
-                token = reader.ReadToEndAsync().Result;
-            }
+        string token = "";
+        try {
+            token = await File.ReadAllTextAsync($@"{Environment.CurrentDirectory}\UserData\DcPlaylistBot\token.txt");
+        }
+        catch (Exception) {
+            Environment.Exit(1);
         }
 
         await Client.LoginAsync(TokenType.Bot, token);
         await Client.StartAsync();
+    }
+
+    private static async Task Quit() {
+        Console.WriteLine("Shutting down now...");
+        await Client.LogoutAsync();
+        await Client.DisposeAsync();
+        Server.Disconnect();
+        await Server.DisposeAsync();
+        Environment.Exit(0);
     }
 }

@@ -1,0 +1,12 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+
+    <vertical>
+        <text text="A file browser will open to select the file containing the token"/>
+        <text color="orange" text="! The game will freeze while the explorer is open !"/>
+        <button on-click="SetToken" text="Set token"/>
+        <text text="No token set" id="token"/>
+        <text color="red" text="May still need a game restart if I haven't fixed it yet!"/>
+    </vertical>
+    
+</bg>

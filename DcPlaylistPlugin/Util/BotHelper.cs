@@ -5,8 +5,7 @@ namespace DcPlaylistPlugin.Util;
 
 public class BotHelper {
     public static void StartBotProcess() {
-        var dirPath = @$"{Environment.CurrentDirectory}\UserData\DcPlaylistBot\";
-        var exePath = @$"{dirPath}\PlaylistBot.exe";
+        var exePath = $@"{Environment.CurrentDirectory}\UserData\DcPlaylistBot\PlaylistBot.exe";
 
         Process.Start(exePath);
         Plugin.Log.Info("Starting bot...");

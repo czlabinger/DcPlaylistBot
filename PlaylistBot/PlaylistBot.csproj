@@ -15,7 +15,6 @@
 
     <ItemGroup>
         <None Remove="token.txt"/>
-        <EmbeddedResource Include="token.txt"/>
     </ItemGroup>
 
 </Project>
