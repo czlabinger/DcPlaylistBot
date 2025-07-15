@@ -7,7 +7,7 @@
         <PluginId>DcPlaylistPlugin</PluginId>
         <PluginName>DcPlaylistPlugin</PluginName>
         <Authors>czlabinger</Authors>
-        <Version>0.0.3</Version>
+        <Version>0.0.4</Version>
         <GameVersion>1.40.7</GameVersion>
         <Description>Add songs to playlist via discord</Description>
         <!--<PluginIcon></PluginIcon>-->

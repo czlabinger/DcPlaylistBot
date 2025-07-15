@@ -13,6 +13,11 @@
         <OutputPath>..\Output\Plugins\</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+        <OutputDir>..\Output\Plugins</OutputDir>
+        <LibsDir>..\Output\Libs</LibsDir>
+        <ArtifactDir>$(OutputDir)\Artifact</ArtifactDir>
+        <ZipDir>$(OutputDir)\zip</ZipDir>
     </PropertyGroup>
 
 
@@ -109,20 +114,25 @@
       <EmbeddedResource Include="UI\settings.bsml" />
     </ItemGroup>
 
-    <Target Name="CleanPluginsFolder" AfterTargets="Build">
-        <RemoveDir Directories="..\Output\Plugins\Artifact"/>
-        <RemoveDir Directories="..\Output\Plugins\zip"/>
+    <ItemGroup>
+        <FilesToMove Include="$(OutputDir)\*.*" Exclude="$(OutputDir)\DcPlaylistPlugin.*" />
+    </ItemGroup>
+    
+    <Target Name="CleanPluginsFolder" AfterTargets="BSMT_CopyToPlugins">
+        <Message Text="Cleaning Libs/Plugins Folder..." Importance="High"/>
+
+        <RemoveDir Directories="$(ArtifactDir)" />
+        <RemoveDir Directories="$(ZipDir)" />
+        <Move SourceFiles="@(FilesToMove)" DestinationFolder="$(LibsDir)" />
+        
     </Target>
 
-    <Target Name="CopyOutput" AfterTargets="Build">
+    <Target Name="CopyOutput" AfterTargets="BSMT_CopyToPlugins">
         <Message Text="Copying output folder after build..." Importance="High"/>
         <ItemGroup>
-            <PluginFiles Include="..\Output\Plugin\DcPlaylistPlugin.*"/>
             <ExeFiles Include="..\Output\UserData\**\*"/>
         </ItemGroup>
-        <Copy
-                SourceFiles="@(PluginFiles)"
-                DestinationFiles="@(PluginFiles->'$(BeatSaberDir)\Plugins\%(RecursiveDir)%(Filename)%(Extension)')"/>
+        
         <Copy
                 SourceFiles="@(ExeFiles)"
                 DestinationFiles="@(ExeFiles->'$(BeatSaberDir)\userData\%(RecursiveDir)%(Filename)%(Extension)')"/>
