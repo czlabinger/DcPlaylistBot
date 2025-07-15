@@ -2,6 +2,6 @@
 <Project>
   <PropertyGroup>
     <BeatSaberDir>G:/Steam/steamapps/common/Beat Saber</BeatSaberDir>
-<!--    <BeatSaberDir>E:\BSManager\BSInstances\1.40.7\</BeatSaberDir>-->
+    <!--<BeatSaberDir>E:\BSManager\BSInstances\1.40.7\</BeatSaberDir>-->
   </PropertyGroup>
 </Project>
