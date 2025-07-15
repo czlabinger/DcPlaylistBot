@@ -20,6 +20,7 @@ public class Program {
 
         await StartBot();
         Client.Ready += async () => await CommandHandler.InitializeAsync();
+        await Client.SetActivityAsync(new CustomStatusGame("Taking requests"));
 
         Server.BeginWaitForConnection(async (asyncResult) => {
             using (StreamReader reader = new StreamReader(Server)) {
