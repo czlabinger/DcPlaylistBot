@@ -6,14 +6,13 @@ using Discord.Interactions;
 namespace PlaylistBot.Commands;
 
 public class CommandHandler : InteractionModuleBase<SocketInteractionContext> {
-    private readonly InteractionService _interactionService = new (Program.Client.Rest);
+    private readonly InteractionService _interactionService = new(Program.Client.Rest);
 
     public async Task InitializeAsync() {
         await _interactionService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
         await _interactionService.RegisterCommandsGloballyAsync();
-        
-        Program.Client.InteractionCreated += async interaction =>
-        {
+
+        Program.Client.InteractionCreated += async interaction => {
             var ctx = new SocketInteractionContext(Program.Client, interaction);
             await _interactionService.ExecuteCommandAsync(ctx, null);
         };
@@ -22,9 +21,9 @@ public class CommandHandler : InteractionModuleBase<SocketInteractionContext> {
     [SlashCommand("add", "Add a map to the queue")]
     public async Task Add(string beatsaverIdOrLink) {
         try {
-
             await RespondAsync(await SendMessage("add " + beatsaverIdOrLink));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             Console.WriteLine("Exception: {0}", ex);
             await RespondAsync($"```Error: {ex.Message}\n{ex.StackTrace}```");
             throw;
@@ -33,9 +32,8 @@ public class CommandHandler : InteractionModuleBase<SocketInteractionContext> {
 
 
     private static async Task<string> SendMessage(string input) {
-        using (NamedPipeClientStream client = new NamedPipeClientStream(".", "DcPlaylistPlugin",
+        using (var client = new NamedPipeClientStream(".", "DcPlaylistPlugin",
                    PipeDirection.InOut, PipeOptions.Asynchronous)) {
-
             input = new string(input.Where(c => !char.IsControl(c)).ToArray());
 
             await client.ConnectAsync();

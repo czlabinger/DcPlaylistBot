@@ -3,7 +3,6 @@ using System.IO;
 using System.IO.Pipes;
 using System.Text;
 using System.Threading.Tasks;
-using BeatSaberMarkupLanguage.Util;
 using DcPlaylistPlugin.Commands;
 using DcPlaylistPlugin.Util;
 using IPA;
@@ -36,14 +35,13 @@ internal class Plugin {
         };
 
         BotHelper.StartBotProcess();
-
     }
 
     [OnExit]
     public void OnApplicationQuit() {
         Log.Debug("OnApplicationQuit");
         try {
-            using (NamedPipeClientStream client = new NamedPipeClientStream(".", "DcPlaylistBotShutdown",
+            using (var client = new NamedPipeClientStream(".", "DcPlaylistBotShutdown",
                        PipeDirection.InOut, PipeOptions.Asynchronous)) {
                 client.Connect();
 
@@ -51,28 +49,29 @@ internal class Plugin {
                     writer.WriteLine("Quit");
                 }
             }
-        } catch (IOException) { }
+        }
+        catch (IOException) { }
     }
 
     private static void StartListening() {
-        NamedPipeServerStream pipeServer = new NamedPipeServerStream(
-            "DcPlaylistPlugin", 
+        var pipeServer = new NamedPipeServerStream(
+            "DcPlaylistPlugin",
             PipeDirection.InOut,
-            NamedPipeServerStream.MaxAllowedServerInstances, 
-            PipeTransmissionMode.Byte, 
+            NamedPipeServerStream.MaxAllowedServerInstances,
+            PipeTransmissionMode.Byte,
             PipeOptions.Asynchronous);
 
         pipeServer.BeginWaitForConnection(asyncResult => {
             try {
                 StartListening();
-                
+
                 CommandHandler.HandleCommand(asyncResult)
                     .ContinueWith(task => {
                         if (task.Exception != null)
                             Log.Error($"Error in pipe connection: {task.Exception}");
                     }, TaskContinuationOptions.OnlyOnFaulted);
-                
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 Log.Error($"Error in pipe connection: {ex}");
             }
         }, pipeServer);
